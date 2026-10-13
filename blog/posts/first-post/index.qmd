@@ -1,0 +1,13 @@
+---
+title: "My First Post"
+date: 2026-10-13
+categories: [data, notes]
+author: "Your Name"
+---
+
+Intro paragraph...
+
+```{python}
+import pandas as pd
+df = pd.read_csv("../../data/my_data.csv")
+df.describe()

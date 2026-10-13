@@ -1,0 +1,42 @@
+project:
+  type: website
+
+website:
+  title: "My Site"
+  site-url: https://USERNAME.github.io/REPO/
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: docs/index.qmd
+        text: Documents
+      - href: blog/index.qmd
+        text: Blog
+      - href: about.qmd
+        text: About
+    right:
+      - icon: github
+        href: https://github.com/USERNAME/REPO
+  sidebar:
+    - id: docs          # shows only on pages tagged with this sidebar
+      contents:
+        - section: "Documents"
+          contents:
+            - docs/index.qmd
+            - docs/guide.qmd
+            - docs/reference.qmd
+  page-footer:
+    center: "© 2026 Your Name"
+  open-graph: true       # nicer link previews when shared
+
+format:
+  html:
+    theme: cosmo         # try: flatly, sandstone, darkly...
+    toc: true            # table of contents on each page
+    code-fold: true       # collapsible code blocks on documents
+
+execute:
+  freeze: auto           # only re-render when inputs change — speeds up builds
+
+blog:
+  - key: listing         # default blog rendering; tweaks go here
