@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://pavolletko.github.io/my-site/about.html</loc>
+    <lastmod>2026-10-14T09:35:36.662Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pavolletko.github.io/my-site/docs/reference.html</loc>
+    <lastmod>2026-10-14T09:35:36.665Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pavolletko.github.io/my-site/docs/guide.html</loc>
+    <lastmod>2026-10-14T09:35:36.665Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pavolletko.github.io/my-site/blog/posts/first-post/index.html</loc>
+    <lastmod>2026-10-14T09:35:36.664Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pavolletko.github.io/my-site/blog/index.html</loc>
+    <lastmod>2026-10-14T09:35:36.664Z</lastmod>
+  </url>
+</urlset>

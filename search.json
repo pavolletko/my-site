@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "blog/posts/first-post/index.html",
+    "href": "blog/posts/first-post/index.html",
+    "title": "My First Post",
+    "section": "",
+    "text": "Intro paragraph…\nimport pandas as pd df = pd.read_csv(“../../data/my_data.csv”) df.describe()"
+  },
+  {
+    "objectID": "blog/index.html",
+    "href": "blog/index.html",
+    "title": "Blog",
+    "section": "",
+    "text": "Posts appear here automatically — no need to list them by hand.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMy First Post\n\n\n\ndata\n\nnotes\n\n\n\n\n\n\n\n\n\nOct 13, 2026\n\n\nYour Name\n\n\n\n\n\nNo matching items"
+  }
+]

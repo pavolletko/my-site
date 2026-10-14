@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>My Site</title>
+<link>https://pavolletko.github.io/my-site/blog/</link>
+<atom:link href="https://pavolletko.github.io/my-site/blog/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.10.19</generator>
+<lastBuildDate>Mon, 12 Oct 2026 22:00:00 GMT</lastBuildDate>
+<item>
+  <title>My First Post</title>
+  <dc:creator>Your Name</dc:creator>
+  <link>https://pavolletko.github.io/my-site/blog/posts/first-post/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Intro paragraph…</p>
+<p>import pandas as pd df = pd.read_csv(“../../data/my_data.csv”) df.describe()</p>
+
+
+
+ ]]></description>
+  <category>data</category>
+  <category>notes</category>
+  <guid>https://pavolletko.github.io/my-site/blog/posts/first-post/</guid>
+  <pubDate>Mon, 12 Oct 2026 22:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
