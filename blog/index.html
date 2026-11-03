@@ -104,6 +104,77 @@ ul.task-list li input[type="checkbox"] {
     }
   })
   </script>
+<style>
+  .quiz-blank {
+    display: inline-block;
+    .quiz-blank:not(.revealed):not(:hover) {
+    width: 6em;
+    overflow: hidden;
+    white-space: nowrap;
+    }
+    padding: 0 0.5em;
+    background-color: #6750ff;      /* purple filled rectangle */
+    color: transparent;             /* hides the answer text */
+    border-radius: 4px;
+    cursor: pointer;
+    line-height: 1.5;
+    user-select: none;              /* prevents accidental selection revealing it */
+    transition: background-color 0.15s, color 0.15s;
+    text-align: center;
+  }
+  .quiz-blank.revealed,
+  .quiz-blank:hover {
+    background-color: #eceafd;      /* light highlight once revealed */
+    color: inherit;                 /* answer text becomes visible */
+  }
+</style>
+<script>
+  document.addEventListener("click", (ev) => {
+    const el = ev.target.closest(".quiz-blank");
+    if (el) el.classList.toggle("revealed");   // tap support on mobile
+  });
+</script>
+<style>
+  .pop-term {
+    border-bottom: 1px dashed #6750ff;
+    cursor: help;
+    position: relative;
+    display: inline-block;
+  }
+  .pop-term .popover-card {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 130%;                       /* floats above the word */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    background: #22222e;
+    color: #eee;
+    padding: 12px 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    font-size: 0.88em;
+    line-height: 1.45;
+    z-index: 1000;
+    transition: opacity 0.15s ease, visibility 0.15s;
+  }
+  /* little arrow pointing at the word */
+  .pop-term .popover-card::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border: 6px solid transparent;
+    border-top-color: #22222e;
+  }
+  .pop-term:hover .popover-card,
+  .pop-term:focus-within .popover-card {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
@@ -193,7 +264,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(2)</span></div><div class="category" data-category="ZGF0YQ==">data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bm90ZXM=">notes <span class="quarto-category-count">(1)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="ZGF0YQ==">data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="bm90ZXM=">notes <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -242,7 +313,32 @@ window.Quarto = {
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="ZGF0YSUyQ25vdGVz" data-listing-date-sort="1791842400000" data-listing-file-modified-sort="1791970536664" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="7">
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1793228400000" data-listing-file-modified-sort="1793706144966" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="491">
+<div class="thumbnail"><a href="../blog/posts/VLBI-post/index.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="../blog/posts/VLBI-post/index.html" class="no-external">VLBI - spracovanie merania</a>
+</h3>
+<div class="delink listing-description"><a href="../blog/posts/VLBI-post/index.html" class="no-external">
+Jednotlivé matice v matici <span class="math inline">\(\mathbf{Q}\)</span>:
+</a></div>
+</div>
+<div class="metadata">
+<a href="../blog/posts/VLBI-post/index.html" class="no-external">
+<div class="listing-date">
+Oct 29, 2026
+</div>
+<div class="listing-author">
+Pavol Letko
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="ZGF0YSUyQ25vdGVz" data-listing-date-sort="1791842400000" data-listing-file-modified-sort="1791970536664" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="7">
 <div class="thumbnail"><a href="../blog/posts/first-post/index.html" class="no-external">
 
 <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
