@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>My Site</title>
+<link>https://pavolletko.github.io/my-site/blog/</link>
+<atom:link href="https://pavolletko.github.io/my-site/blog/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.10.19</generator>
+<lastBuildDate>Wed, 28 Oct 2026 23:00:00 GMT</lastBuildDate>
+<item>
+  <title>VLBI - spracovanie merania</title>
+  <dc:creator>Pavol Letko</dc:creator>
+  <link>https://pavolletko.github.io/my-site/blog/posts/VLBI-post/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Jednotlivé matice v matici <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BQ%7D">:</p>
+<p><span id="eq-XY"><img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BY%7D%20=%0A%5Cbegin%7Bpmatrix%7D%0A1%20&amp;%200%20&amp;%200%20%5C%5C%0A0%20&amp;%20%5Ccos%20y_p%20&amp;%20-%5Csin%20y_p%20%5C%5C%0A0%20&amp;%20%5Csin%20y_p%20&amp;%20%5Ccos%20y_p%0A%5Cend%7Bpmatrix%7D,%0A%5Cqquad%0A%5Cmathbf%7BX%7D%20=%0A%5Cbegin%7Bpmatrix%7D%0A%5Ccos%20x_p%20&amp;%200%20&amp;%20-%5Csin%20x_p%20%5C%5C%0A0%20&amp;%201%20&amp;%200%20%5C%5C%0A%5Csin%20x_p%20&amp;%200%20&amp;%20%5Ccos%20x_p%0A%5Cend%7Bpmatrix%7D,%20%5Ctag%7B1%7D"></span></p>
+<p><span id="eq-U"><img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BU%7D%20=%20%5Cmathbf%7BR%7D_z(-S)%20=%0A%5Cbegin%7Bpmatrix%7D%0A%5Ccos%20S%20&amp;%20-%5Csin%20S%20&amp;%200%20%5C%5C%0A%5Csin%20S%20&amp;%20%5Ccos%20S%20&amp;%200%20%5C%5C%0A0%20&amp;%200%20&amp;%201%0A%5Cend%7Bpmatrix%7D,%20%5Ctag%7B2%7D"></span></p>
+<p>V rovnici (1) je vidieť…</p>
+<p>pričom inverznú precesno-nutačnú maticu <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BR%7D%5E%7B-1%7D"> dostaneme na základe vlastnosti <strong>ortogonality</strong> rotačnej matice, takže <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BR%7D%5E%7B-1%7D"> = <span class="quiz-blank"><img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BR%7D%5ET"></span>.</p>
+<p>Matica <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BQ%7D"> musí byť známa vždy k okamihu daného pozorovania <img src="https://latex.codecogs.com/png.latex?i">, preto jednotlivé matice musíme k tomuto okamihu vypočítať, resp. interpolovať. Vo výsledku tak dostaneme <img src="https://latex.codecogs.com/png.latex?n"> matíc <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BQ%7D_i">.</p>
+<section id="interpolácia" class="level3">
+<h3 class="anchored" data-anchor-id="interpolácia">Interpolácia</h3>
+</section>
+<section id="výpočet-okamihov-merania-v-rôznych-časových-systémoch" class="level3">
+<h3 class="anchored" data-anchor-id="výpočet-okamihov-merania-v-rôznych-časových-systémoch">Výpočet okamihov merania v rôznych časových systémoch</h3>
+<p>Merané časové oneskorenie <img src="https://latex.codecogs.com/png.latex?%5Ctau"> je registrované v časovom systéme atómových hodín danej stanice na povrchu Zeme, ktorým je systém <img src="https://latex.codecogs.com/png.latex?UTC">. V dátovom súbore z merania sú zaznamenané okamihy registrácie príjmu signálu na hodinách stanice 1 - okamihy merania <img src="https://latex.codecogs.com/png.latex?UTC_i">, pričom <img src="https://latex.codecogs.com/png.latex?i%20=%20(1,%202,%20...%20n)">. Tieto postupne vyjadríme v systéme <img src="https://latex.codecogs.com/png.latex?UT1">, <img src="https://latex.codecogs.com/png.latex?TT">, <span class="pop-term"><img src="https://latex.codecogs.com/png.latex?TDB"><span class="popover-card"><strong>TDB:</strong> Barycentrický dynamický čas </span></span> a v pravom greenwichskom hviezdnom čase <img src="https://latex.codecogs.com/png.latex?S">.</p>
+</section>
+<section id="systematické-korekcie" class="level3">
+<h3 class="anchored" data-anchor-id="systematické-korekcie">Systematické korekcie</h3>
+<ul>
+<li>Oprava z ionosféry <img src="https://latex.codecogs.com/png.latex?ion_i">,</li>
+<li>Oprava z troposféry <img src="https://latex.codecogs.com/png.latex?trop_i">,</li>
+<li>Oprava (korekcia) hodín stanice 2 na hodiny stanice 1 <img src="https://latex.codecogs.com/png.latex?K">.</li>
+</ul>
+<section id="oprava-z-ionosféry-ion" class="level4">
+<h4 class="anchored" data-anchor-id="oprava-z-ionosféry-ion">Oprava z ionosféry <img src="https://latex.codecogs.com/png.latex?ion"></h4>
+<ul>
+<li>nachádza sa priamo v dátovom súbore z merania (viď. popis formátu NGS),</li>
+<li>rovnaká pre obe stanice, stačí ju teda len pridať k približnému oneskoreniu <img src="https://latex.codecogs.com/png.latex?%5Ctau'_0">.</li>
+</ul>
+</section>
+<section id="oprava-z-troposféry-trop" class="level4">
+<h4 class="anchored" data-anchor-id="oprava-z-troposféry-trop">Oprava z troposféry <img src="https://latex.codecogs.com/png.latex?trop"></h4>
+<ul>
+<li>funkcia okamžitého stavu atmosféry v okamihu merania,</li>
+<li>počítaná na základe empirických vzťahov a prijatého modelu atmosféry,</li>
+<li>počítaná pre každý meraný zdroj <img src="https://latex.codecogs.com/png.latex?i"> a každú stanicu <img src="https://latex.codecogs.com/png.latex?j"> zvlášť - <img src="https://latex.codecogs.com/png.latex?trop_%7Bij%7D">.</li>
+</ul>
+<p><span id="eq-trop"><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Bsplit%7D%0Atrop_%7Bij%7D%20&amp;=%20%5Cfrac%7B155%7B,%7D2%20%5Ccdot%2010%5E%7B-7%7D%5C,%5Cdfrac%7Bp_%7Bij%7D%7D%7BT_%7Bij%7D%7D%5Cleft%5B40136%20+%20148%7B,%7D72%5C,(T_%7Bij%7D%20-%20273%7B,%7D16)%5Cright%5D%7D%7B%5Csin%5Csqrt%7B(90%5E%7B%5Ccirc%7D%20-%20z_%7Bij%7D)%5E2%20+%20(2%7B,%7D5%5E%7B%5Ccirc%7D)%5E2%7D%7D%20+%20%5C%5C%0A&amp;%20%5C%5C%0A&amp;%5Cquad+%20%5Cfrac%7B155%7B,%7D2%20%5Ccdot%2010%5E%7B-7%7D%5C,%5Cdfrac%7B4810%5C,e_%7Bij%7D%7D%7BT_%7Bij%7D%5E2%7D%20%5Ccdot%2011000%7D%7B%5Csin%5Csqrt%7B(90%5E%7B%5Ccirc%7D%20-%20z_%7Bij%7D)%5E2%20+%20(1%7B,%7D5%5E%7B%5Ccirc%7D)%5E2%7D%7D,%0A%5Cend%7Bsplit%7D%0A%5Ctag%7B3%7D"></span></p>
+<p>kde <img src="https://latex.codecogs.com/png.latex?%5C%5C"> <img src="https://latex.codecogs.com/png.latex?%5Cquad"> <img src="https://latex.codecogs.com/png.latex?p_%7Bij%7D"> - tlak na stanici <img src="https://latex.codecogs.com/png.latex?j"> v okamihu merania <img src="https://latex.codecogs.com/png.latex?i"> v [<img src="https://latex.codecogs.com/png.latex?hPa">], <img src="https://latex.codecogs.com/png.latex?%5C%5C"> <img src="https://latex.codecogs.com/png.latex?%5Cquad"> <img src="https://latex.codecogs.com/png.latex?T_%7Bij%7D"> - absolútna teplota na stanici <img src="https://latex.codecogs.com/png.latex?j"> v okamihu merania <img src="https://latex.codecogs.com/png.latex?i"> v [<img src="https://latex.codecogs.com/png.latex?%5E%5Ccirc%20K">], pričom <img src="https://latex.codecogs.com/png.latex?%5C%5C"> <span id="eq-T"><img src="https://latex.codecogs.com/png.latex?T_%7Bij%7D%20=%20t_%7Bij%7D%20+%20273,16%5E%7B%5Ccirc%7DC,%20%5Ctag%7B4%7D"></span><img src="https://latex.codecogs.com/png.latex?%5C%5C"> <img src="https://latex.codecogs.com/png.latex?%5Cquad"> <img src="https://latex.codecogs.com/png.latex?t_%7Bij%7D"> - teplota na stanici <img src="https://latex.codecogs.com/png.latex?j"> v okamihu <img src="https://latex.codecogs.com/png.latex?i"> v [<img src="https://latex.codecogs.com/png.latex?%5E%5Ccirc%20C">], <img src="https://latex.codecogs.com/png.latex?%5C%5C"> <img src="https://latex.codecogs.com/png.latex?%5Cquad"> <img src="https://latex.codecogs.com/png.latex?e_%7Bij%7D"> - relatívna vlhkosť vzduchu na stanici <img src="https://latex.codecogs.com/png.latex?j"> v okamihu merania <img src="https://latex.codecogs.com/png.latex?i">, pričom <img src="https://latex.codecogs.com/png.latex?%5C%5C"> <span id="eq-e"><img src="https://latex.codecogs.com/png.latex?e_%7Bij%7D%20=%206%7B,%7D107%20%5Cfrac%7Bf_%7Bij%7D%7D%7B100%7D10%5E%5Cfrac%7B7,6326%5Ccdot%20t_%7Bij%7D%7D%7B241,9+t_%7Bij%7D%7D,%20%5Ctag%7B5%7D"></span> <img src="https://latex.codecogs.com/png.latex?%5C%5C"> <img src="https://latex.codecogs.com/png.latex?%5Cquad"> <img src="https://latex.codecogs.com/png.latex?f_%7Bij%7D"> - absolútna vlhkosť vzduchu v [%],<img src="https://latex.codecogs.com/png.latex?%5C%5C"> <img src="https://latex.codecogs.com/png.latex?%5Cquad"> <img src="https://latex.codecogs.com/png.latex?z_%7Bij%7D"> - zenitová vzdialenosť zo stanice <img src="https://latex.codecogs.com/png.latex?j"> na kvazar <img src="https://latex.codecogs.com/png.latex?i"> v [<img src="https://latex.codecogs.com/png.latex?%5E%5Ccirc">].</p>
+<p>Zenitová vzdialenosť <img src="https://latex.codecogs.com/png.latex?z_%7Bij%7D"> sa vypočíta štandardne pomocou kosínovej vety pre stranu v nautickom trojuholníku, kde namiesto hviezdy vystupuje kvazar Q a teda jeho rovníkové súradnice:</p>
+<p><span id="eq-z"><img src="https://latex.codecogs.com/png.latex?%5Ccos%20z_%7Bij%7D%20=%20%5Csin%5CPhi_j%20%5Csin%5Cdelta_i%20+%20%5Ccos%5CPhi_j%20%5Ccos%5Cdelta_i%20%5Ccos%20t_%7Bij%7D,%20%5Ctag%7B6%7D"></span></p>
+<p>pričom pre hodinový uhol <img src="https://latex.codecogs.com/png.latex?t_%7Bij%7D"> platí známy vzťah</p>
+<p><span id="eq-t"><img src="https://latex.codecogs.com/png.latex?t_%7Bij%7D%20=%20s_i%20-%20%5Calpha_j%20=%20S_i%20+%20%5CLambda_j%20-%20%5Calpha_i,%20%5Cqquad%200%20%5Cle%20t_%7Bij%7D%20%5Cle%2024%5E%7B%5Cmathrm%7Bh%7D%7D.%20%5Ctag%7B7%7D"></span></p>
+<p>Zemepisné súradnice stanoviska <img src="https://latex.codecogs.com/png.latex?%5CPhi_j">, <img src="https://latex.codecogs.com/png.latex?%5CLambda_j"> získame konverziou zadaných priestorových karteziánskych súradníc príslušného stanoviska v systéme ITRS.</p>
+<p><abbr title="European Organization for Nuclear Research">CERN</abbr></p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://pavolletko.github.io/my-site/blog/posts/VLBI-post/</guid>
+  <pubDate>Wed, 28 Oct 2026 23:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>My First Post</title>
+  <dc:creator>Your Name</dc:creator>
+  <link>https://pavolletko.github.io/my-site/blog/posts/first-post/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Intro paragraph…</p>
+<p>import pandas as pd df = pd.read_csv(“../../data/my_data.csv”) df.describe()</p>
+
+
+
+ ]]></description>
+  <category>data</category>
+  <category>notes</category>
+  <guid>https://pavolletko.github.io/my-site/blog/posts/first-post/</guid>
+  <pubDate>Mon, 12 Oct 2026 22:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>

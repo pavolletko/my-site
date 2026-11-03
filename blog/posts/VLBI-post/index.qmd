@@ -1,0 +1,91 @@
+---
+title: "VLBI - spracovanie merania"
+author: "Pavol Letko"
+date: 2026-10-29
+---
+
+Jednotlivé matice v matici $\mathbf{Q}$:
+
+$$\mathbf{Y} =
+\begin{pmatrix}
+1 & 0 & 0 \\
+0 & \cos y_p & -\sin y_p \\
+0 & \sin y_p & \cos y_p
+\end{pmatrix},
+\qquad
+\mathbf{X} =
+\begin{pmatrix}
+\cos x_p & 0 & -\sin x_p \\
+0 & 1 & 0 \\
+\sin x_p & 0 & \cos x_p
+\end{pmatrix},$$ {#eq-XY}
+
+$$\mathbf{U} = \mathbf{R}_z(-S) =
+\begin{pmatrix}
+\cos S & -\sin S & 0 \\
+\sin S & \cos S & 0 \\
+0 & 0 & 1
+\end{pmatrix},$$ {#eq-U}
+
+V rovnici ([-@eq-XY]) je vidieť...
+
+pričom inverznú precesno-nutačnú maticu $\mathbf{R}^{-1}$ dostaneme na základe vlastnosti **ortogonality** rotačnej matice, takže $\mathbf{R}^{-1}$ = <span class="quiz-blank">$\mathbf{R}^T$</span>.
+
+Matica $\mathbf{Q}$ musí byť známa vždy k okamihu daného pozorovania $i$, preto jednotlivé matice musíme k tomuto okamihu vypočítať, resp. interpolovať. Vo výsledku tak dostaneme $n$ matíc $\mathbf{Q}_i$.
+
+### Interpolácia
+
+### Výpočet okamihov merania v rôznych časových systémoch
+
+Merané časové oneskorenie $\tau$ je registrované v časovom systéme atómových hodín danej stanice na povrchu Zeme, ktorým je systém $UTC$. V dátovom súbore z merania sú zaznamenané okamihy registrácie príjmu signálu na hodinách stanice 1 - okamihy merania $UTC_i$, pričom $i = (1, 2, ... n)$. Tieto postupne vyjadríme v systéme $UT1$, $TT$, <span class="pop-term">$TDB$<span class="popover-card"><strong>TDB:</strong> Barycentrický dynamický čas
+</span></span> a v pravom greenwichskom hviezdnom čase $S$.
+
+### Systematické korekcie
+
+- Oprava z ionosféry $ion_i$,
+- Oprava z troposféry $trop_i$,
+- Oprava (korekcia) hodín stanice 2 na hodiny stanice 1 $K$.
+
+#### Oprava z ionosféry $ion$
+- nachádza sa priamo v dátovom súbore z merania (viď. popis formátu NGS),
+- rovnaká pre obe stanice, stačí ju teda len pridať k približnému oneskoreniu $\tau'_0$.
+
+#### Oprava z troposféry $trop$
+- funkcia okamžitého stavu atmosféry v okamihu merania,
+- počítaná na základe empirických vzťahov a prijatého modelu atmosféry,
+- počítaná pre každý meraný zdroj $i$ a každú stanicu $j$ zvlášť - $trop_{ij}$.
+
+$$
+\begin{split}
+trop_{ij} &= \frac{155{,}2 \cdot 10^{-7}\,\dfrac{p_{ij}}{T_{ij}}\left[40136 + 148{,}72\,(T_{ij} - 273{,}16)\right]}{\sin\sqrt{(90^{\circ} - z_{ij})^2 + (2{,}5^{\circ})^2}} + \\
+& \\
+&\quad+ \frac{155{,}2 \cdot 10^{-7}\,\dfrac{4810\,e_{ij}}{T_{ij}^2} \cdot 11000}{\sin\sqrt{(90^{\circ} - z_{ij})^2 + (1{,}5^{\circ})^2}},
+\end{split} 
+$$ {#eq-trop}
+
+kde $\\$
+    $\quad$ $p_{ij}$ - tlak na stanici $j$ v okamihu merania $i$ v [$hPa$], $\\$
+    $\quad$ $T_{ij}$ - absolútna teplota na stanici $j$ v okamihu merania $i$ v [$^\circ K$], pričom $\\$
+    $$T_{ij} = t_{ij} + 273,16^{\circ}C,$$ {#eq-T}$\\$
+    $\quad$ $t_{ij}$ - teplota na stanici $j$ v okamihu $i$ v [$^\circ C$], $\\$
+    $\quad$ $e_{ij}$ - relatívna vlhkosť vzduchu na stanici $j$ v okamihu merania $i$, pričom $\\$
+    $$e_{ij} = 6{,}107 \frac{f_{ij}}{100}10^\frac{7,6326\cdot t_{ij}}{241,9+t_{ij}},$$ {#eq-e} $\\$
+    $\quad$ $f_{ij}$ - absolútna vlhkosť vzduchu v [%],$\\$
+    $\quad$ $z_{ij}$ - zenitová vzdialenosť zo stanice $j$ na kvazar $i$ v [$^\circ$].
+
+Zenitová vzdialenosť $z_{ij}$ sa vypočíta štandardne pomocou kosínovej vety pre stranu  v nautickom trojuholníku, kde namiesto hviezdy vystupuje kvazar Q a teda jeho rovníkové súradnice:
+
+$$\cos z_{ij} = \sin\Phi_j \sin\delta_i + \cos\Phi_j \cos\delta_i \cos t_{ij},$$ {#eq-z}
+
+pričom pre hodinový uhol $t_{ij}$ platí známy vzťah
+
+$$t_{ij} = s_i - \alpha_j = S_i + \Lambda_j - \alpha_i, \qquad 0 \le t_{ij} \le 24^{\mathrm{h}}.$$ {#eq-t}
+
+Zemepisné súradnice stanoviska $\Phi_j$, $\Lambda_j$ získame konverziou zadaných priestorových karteziánskych súradníc príslušného stanoviska v systéme ITRS.
+
+
+
+
+
+
+<abbr title="European Organization for Nuclear Research">CERN</abbr>

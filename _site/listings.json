@@ -1,0 +1,10 @@
+[
+  {
+    "listing": "/blog/index.html",
+    "items": [
+      "/blog/posts/second-post/index.html",
+      "/blog/posts/VLBI-post/index.html",
+      "/blog/posts/first-post/index.html"
+    ]
+  }
+]

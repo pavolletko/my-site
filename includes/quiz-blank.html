@@ -1,0 +1,30 @@
+<style>
+  .quiz-blank {
+    display: inline-block;
+    .quiz-blank:not(.revealed):not(:hover) {
+    width: 6em;
+    overflow: hidden;
+    white-space: nowrap;
+    }
+    padding: 0 0.5em;
+    background-color: #6750ff;      /* purple filled rectangle */
+    color: transparent;             /* hides the answer text */
+    border-radius: 4px;
+    cursor: pointer;
+    line-height: 1.5;
+    user-select: none;              /* prevents accidental selection revealing it */
+    transition: background-color 0.15s, color 0.15s;
+    text-align: center;
+  }
+  .quiz-blank.revealed,
+  .quiz-blank:hover {
+    background-color: #eceafd;      /* light highlight once revealed */
+    color: inherit;                 /* answer text becomes visible */
+  }
+</style>
+<script>
+  document.addEventListener("click", (ev) => {
+    const el = ev.target.closest(".quiz-blank");
+    if (el) el.classList.toggle("revealed");   // tap support on mobile
+  });
+</script>

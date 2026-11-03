@@ -3,7 +3,7 @@ project:
 
 website:
   title: "My Site"
-  site-url: https://USERNAME.github.io/REPO/
+  site-url: https://pavolletko.github.io/my-site/
   navbar:
     left:
       - href: index.qmd
@@ -16,7 +16,7 @@ website:
         text: About
     right:
       - icon: github
-        href: https://github.com/USERNAME/REPO
+        href: https://github.com/pavolletko/my-site
   sidebar:
     - id: docs          # shows only on pages tagged with this sidebar
       contents:
@@ -31,9 +31,12 @@ website:
 
 format:
   html:
-    theme: cosmo         # try: flatly, sandstone, darkly...
+    theme: flatly         # try: flatly, sandstone, darkly...
     toc: true            # table of contents on each page
     code-fold: true       # collapsible code blocks on documents
+    include-in-header: 
+      - includes/quiz-blank.html
+      - includes/popover.html
 
 execute:
   freeze: auto           # only re-render when inputs change — speeds up builds
