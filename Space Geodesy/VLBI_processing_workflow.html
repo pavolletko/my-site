@@ -1,0 +1,701 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>VLBI Processing Workflow</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+/* Vertical timeline infographic — six phase-coded phases, technical badge system */
+:root {
+  --bg:        #EEF3FB;
+  --surface:   #FFFFFF;
+  --fg:        #0C1A28;
+  --fg-2:      #344F6B;
+  --fg-3:      #647D96;
+  --border:    rgba(12,26,40,.09);
+  --shadow:    0 2px 14px rgba(12,26,40,.07);
+
+  --obs:    #1D5FCC;   /* observation — blue       */
+  --obs-s:  #EBF3FF;
+  --cor:    #6D28D9;   /* correlation — violet     */
+  --cor-s:  #F3EFFE;
+  --cal:    #047857;   /* calibration — emerald    */
+  --cal-s:  #E9FAF4;
+  --pre:    #B45309;   /* pre-processing — amber   */
+  --pre-s:  #FEF8EC;
+  --est:    #B91C1C;   /* estimation — crimson     */
+  --est-s:  #FEF0F0;
+  --prd:    #0369A1;   /* products — sky           */
+  --prd-s:  #E9F6FE;
+
+  --ff-head: 'Source Serif 4', Georgia, serif;
+  --ff-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --ff-mono: 'IBM Plex Mono', 'Menlo', monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:       #060E1A;
+    --surface:  #0C1A28;
+    --fg:       #E4EEF8;
+    --fg-2:     #7FA3C0;
+    --fg-3:     #456480;
+    --border:   rgba(228,238,248,.08);
+    --shadow:   0 2px 18px rgba(0,0,0,.35);
+    --obs-s:    rgba(29,95,204,.14);
+    --cor-s:    rgba(109,40,217,.14);
+    --cal-s:    rgba(4,120,87,.14);
+    --pre-s:    rgba(180,83,9,.14);
+    --est-s:    rgba(185,28,28,.14);
+    --prd-s:    rgba(3,105,161,.14);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:       #060E1A;
+  --surface:  #0C1A28;
+  --fg:       #E4EEF8;
+  --fg-2:     #7FA3C0;
+  --fg-3:     #456480;
+  --border:   rgba(228,238,248,.08);
+  --shadow:   0 2px 18px rgba(0,0,0,.35);
+  --obs-s: rgba(29,95,204,.14);
+  --cor-s: rgba(109,40,217,.14);
+  --cal-s: rgba(4,120,87,.14);
+  --pre-s: rgba(180,83,9,.14);
+  --est-s: rgba(185,28,28,.14);
+  --prd-s: rgba(3,105,161,.14);
+  color-scheme: dark;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--ff-body);
+  font-size: 15px;
+  line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left,0px));
+  padding-right: max(16px, env(safe-area-inset-right,0px));
+  padding-block: 0;
+}
+
+/* ── Header ─────────────────────────────── */
+.hdr {
+  background: linear-gradient(130deg,#080F1D 0%,#0F2240 55%,#14335A 100%);
+  color: #E4EEF8;
+  padding: 52px max(28px,env(safe-area-inset-left,0px)) 44px;
+  padding-right: max(28px,env(safe-area-inset-right,0px));
+  margin-left:  calc(-1 * max(16px,env(safe-area-inset-left,0px)));
+  margin-right: calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hdr::before {
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(59,130,246,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,.055) 1px,transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+}
+.hdr-eyebrow {
+  font-family: var(--ff-mono);
+  font-size: 11.5px; font-weight:600;
+  letter-spacing:.15em; text-transform:uppercase;
+  color:#60A5FA; margin-bottom:14px; position:relative;
+}
+.hdr h1 {
+  font-family: var(--ff-head);
+  font-size: clamp(26px,5.5vw,48px);
+  font-weight:700; line-height:1.12;
+  text-wrap:balance; margin-bottom:14px; position:relative;
+}
+.hdr-sub {
+  font-size:15.5px; color:#91B4D8;
+  max-width:560px; position:relative; margin-bottom:28px;
+}
+.legend {
+  display:flex; flex-wrap:wrap; gap:8px 18px; position:relative;
+}
+.leg {
+  display:flex; align-items:center; gap:7px;
+  font-size:12.5px; color:#AECDE6; font-weight:500;
+}
+.leg-dot { width:9px;height:9px;border-radius:50%;flex-shrink:0; }
+
+/* ── Timeline wrapper ────────────────────── */
+.tl {
+  max-width:760px; margin:0 auto; padding-bottom:72px;
+}
+
+/* Phase group */
+.phase { margin-bottom:6px; }
+.phase-hd {
+  display:flex; align-items:center; gap:12px; margin-bottom:22px;
+}
+.phase-pill {
+  font-family:var(--ff-mono); font-size:11px; font-weight:600;
+  letter-spacing:.11em; text-transform:uppercase;
+  color:#fff; padding:4px 13px; border-radius:20px;
+  white-space:nowrap; flex-shrink:0;
+}
+.phase-rule { flex:1; height:1px; opacity:.22; }
+
+/* Step row */
+.step { display:flex; gap:0; position:relative; }
+
+/* Connector column */
+.conn {
+  display:flex; flex-direction:column; align-items:center;
+  width:54px; flex-shrink:0;
+}
+.node {
+  width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; z-index:1;
+}
+.trail {
+  flex:1; width:2px; min-height:20px;
+  margin:5px 0; opacity:.22;
+}
+
+/* Step card */
+.card {
+  flex:1; background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; padding:18px 20px;
+  box-shadow:var(--shadow); margin-bottom:16px; min-width:0;
+}
+.card-hd {
+  display:flex; align-items:flex-start; gap:12px; margin-bottom:11px;
+}
+.ico {
+  width:40px; height:40px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.card-name {
+  font-family:var(--ff-head);
+  font-size:17.5px; font-weight:700; line-height:1.2;
+  color:var(--fg); margin-bottom:3px;
+}
+.card-sub {
+  font-family:var(--ff-mono); font-size:12px; color:var(--fg-3);
+}
+.card-desc {
+  font-size:13.5px; color:var(--fg-2); line-height:1.58;
+  margin-bottom:13px;
+}
+.card-desc em { font-style:normal; font-family:var(--ff-mono); font-size:12.5px; }
+.card-desc strong { color:var(--fg); font-weight:600; }
+
+/* Badges */
+.badges { display:flex; flex-wrap:wrap; gap:5px; }
+.badge {
+  font-family:var(--ff-mono); font-size:11px; font-weight:500;
+  padding:3px 9px; border-radius:6px;
+  background:var(--bg); border:1px solid var(--border);
+  color:var(--fg-2);
+}
+.bv { color:#fff; border:none; font-weight:600; font-size:11.5px; }
+.bv1{ background:#1D5FCC; }
+.bv2{ background:#6D28D9; }
+.bv3{ background:#047857; }
+.bv4{ background:#B45309; }
+
+/* Products grid */
+.prd-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:9px; margin:14px 0 13px;
+}
+.prd-tile {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:10px; padding:10px 13px; text-align:center;
+}
+.prd-tile-lbl {
+  font-family:var(--ff-mono); font-size:10px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.08em;
+  color:var(--fg-3); margin-bottom:4px;
+}
+.prd-tile-val {
+  font-family:var(--ff-mono); font-size:13px;
+  font-weight:600; color:var(--fg);
+}
+
+/* ── Phase color helpers ─────────────────── */
+/* obs */
+.obs-pill{background:var(--obs)} .obs-rule{background:var(--obs)}
+.obs-node{background:rgba(29,95,204,.14)}
+.obs-ico {background:rgba(29,95,204,.11)}
+.obs-b{color:var(--obs);background:var(--obs-s);border-color:rgba(29,95,204,.22)}
+.obs-trail{background:var(--obs)}
+/* cor */
+.cor-pill{background:var(--cor)} .cor-rule{background:var(--cor)}
+.cor-node{background:rgba(109,40,217,.14)}
+.cor-ico {background:rgba(109,40,217,.11)}
+.cor-b{color:var(--cor);background:var(--cor-s);border-color:rgba(109,40,217,.22)}
+.cor-trail{background:var(--cor)}
+/* cal */
+.cal-pill{background:var(--cal)} .cal-rule{background:var(--cal)}
+.cal-node{background:rgba(4,120,87,.14)}
+.cal-ico {background:rgba(4,120,87,.11)}
+.cal-b{color:var(--cal);background:var(--cal-s);border-color:rgba(4,120,87,.22)}
+.cal-trail{background:var(--cal)}
+/* pre */
+.pre-pill{background:var(--pre)} .pre-rule{background:var(--pre)}
+.pre-node{background:rgba(180,83,9,.14)}
+.pre-ico {background:rgba(180,83,9,.11)}
+.pre-b{color:var(--pre);background:var(--pre-s);border-color:rgba(180,83,9,.22)}
+.pre-trail{background:var(--pre)}
+/* est */
+.est-pill{background:var(--est)} .est-rule{background:var(--est)}
+.est-node{background:rgba(185,28,28,.14)}
+.est-ico {background:rgba(185,28,28,.11)}
+.est-b{color:var(--est);background:var(--est-s);border-color:rgba(185,28,28,.22)}
+.est-trail{background:var(--est)}
+/* prd */
+.prd-pill{background:var(--prd)} .prd-rule{background:var(--prd)}
+.prd-node{background:rgba(3,105,161,.14)}
+.prd-ico {background:rgba(3,105,161,.11)}
+.prd-b{color:var(--prd);background:var(--prd-s);border-color:rgba(3,105,161,.22)}
+
+/* ── Footer ─────────────────────────────── */
+.ftr {
+  text-align:center;
+  font-family:var(--ff-mono); font-size:11.5px; color:var(--fg-3);
+  padding:22px max(24px,env(safe-area-inset-left,0px));
+  padding-right:max(24px,env(safe-area-inset-right,0px));
+  border-top:1px solid var(--border);
+  margin-left:  calc(-1 * max(16px,env(safe-area-inset-left,0px)));
+  margin-right: calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+}
+
+@media(max-width:520px){
+  .conn{width:38px}
+  .node{width:28px;height:28px}
+  .ico{width:32px;height:32px;border-radius:8px}
+  .card-name{font-size:16px}
+  .legend{display:none}
+  .prd-grid{grid-template-columns:1fr 1fr}
+  .hdr{padding:36px max(18px,env(safe-area-inset-left,0px)) 32px;padding-right:max(18px,env(safe-area-inset-right,0px))}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<!-- ── Inline SVG symbol library ─────────────────────────────────── -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden">
+<defs>
+<symbol id="s-ant" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4.5 7.5A8 8 0 0 1 19.5 7.5"/>
+  <path d="M7.5 10.5A4.5 4.5 0 0 1 16.5 10.5"/>
+  <circle cx="12" cy="11" r="1.4" fill="currentColor" stroke="none"/>
+  <line x1="12" y1="12.4" x2="12" y2="19.5"/>
+  <line x1="9.5" y1="19.5" x2="14.5" y2="19.5"/>
+</symbol>
+<symbol id="s-disk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="6" width="18" height="12" rx="2.5"/>
+  <path d="M3 10.5h18"/>
+  <circle cx="17" cy="14.5" r="1.5" fill="currentColor" stroke="none"/>
+  <line x1="6" y1="14.5" x2="12" y2="14.5"/>
+</symbol>
+<symbol id="s-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="7" y="7" width="10" height="10" rx="2"/>
+  <line x1="7" y1="9.5" x2="3" y2="9.5"/>
+  <line x1="7" y1="12" x2="3" y2="12"/>
+  <line x1="7" y1="14.5" x2="3" y2="14.5"/>
+  <line x1="17" y1="9.5" x2="21" y2="9.5"/>
+  <line x1="17" y1="12" x2="21" y2="12"/>
+  <line x1="17" y1="14.5" x2="21" y2="14.5"/>
+  <line x1="9.5" y1="7" x2="9.5" y2="3"/>
+  <line x1="14.5" y1="7" x2="14.5" y2="3"/>
+  <line x1="9.5" y1="17" x2="9.5" y2="21"/>
+  <line x1="14.5" y1="17" x2="14.5" y2="21"/>
+</symbol>
+<symbol id="s-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="3,12 5,8 7,14 9,10 11,15 13,9 15,13 17,7 19,12 21,12"/>
+</symbol>
+<symbol id="s-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+</symbol>
+<symbol id="s-mag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="11" cy="11" r="7"/>
+  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  <line x1="8" y1="11" x2="14" y2="11"/>
+  <line x1="11" y1="8" x2="11" y2="14"/>
+</symbol>
+<symbol id="s-matrix" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+  <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+  <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+  <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+</symbol>
+<symbol id="s-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+  <polyline points="22 4 12 14.01 9 11.01"/>
+</symbol>
+<symbol id="s-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"/>
+  <line x1="2" y1="12" x2="22" y2="12"/>
+  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/>
+</symbol>
+</defs>
+</svg>
+
+<!-- ── Header ──────────────────────────────────────────────────────── -->
+<header class="hdr" role="banner">
+  <p class="hdr-eyebrow">International VLBI Service · Data Flow</p>
+  <h1>VLBI Data Processing<br>Workflow</h1>
+  <p class="hdr-sub">From raw antenna recordings at globally distributed stations to published geodetic products at IERS — six processing phases, nine steps.</p>
+  <div class="legend" role="list" aria-label="Phase colour legend">
+    <span class="leg" role="listitem"><span class="leg-dot" style="background:var(--obs)"></span>Observation</span>
+    <span class="leg" role="listitem"><span class="leg-dot" style="background:var(--cor)"></span>Correlation</span>
+    <span class="leg" role="listitem"><span class="leg-dot" style="background:var(--cal)"></span>Theory &amp; Calibration</span>
+    <span class="leg" role="listitem"><span class="leg-dot" style="background:var(--pre)"></span>Pre-processing</span>
+    <span class="leg" role="listitem"><span class="leg-dot" style="background:var(--est)"></span>Estimation</span>
+    <span class="leg" role="listitem"><span class="leg-dot" style="background:var(--prd)"></span>Products</span>
+  </div>
+</header>
+
+<!-- ── Timeline ────────────────────────────────────────────────────── -->
+<main class="tl" aria-label="Processing workflow">
+
+  <!-- ═══════════════ PHASE 1 · OBSERVATION ═══════════════ -->
+  <section class="phase" aria-labelledby="ph1">
+    <div class="phase-hd">
+      <span id="ph1" class="phase-pill obs-pill">Phase 1 · Observation</span>
+      <div class="phase-rule obs-rule" role="presentation"></div>
+    </div>
+
+    <!-- Step 1 — Antennas -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node obs-node">
+          <svg width="17" height="17" style="color:var(--obs)"><use href="#s-ant"/></svg>
+        </div>
+        <div class="trail obs-trail"></div>
+      </div>
+      <article class="card">
+        <div class="card-hd">
+          <div class="ico obs-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--obs)"><use href="#s-ant"/></svg>
+          </div>
+          <div>
+            <div class="card-name">Radio Telescopes</div>
+            <div class="card-sub">IVS Network · ~40 stations worldwide</div>
+          </div>
+        </div>
+        <p class="card-desc">Multiple antennas simultaneously observe the same extragalactic radio source (quasar). Each station samples the incoming wavefront at S- and X-band (legacy S/X, τ<sub>amb</sub> ≈ 50 ns) or broadband 2–14 GHz (VGOS, τ<sub>amb</sub> ≈ 83 ps). An on-site <strong>hydrogen maser</strong> provides the ultra-stable frequency reference, contributing &lt;1 ps/s instability.</p>
+        <div class="badges">
+          <span class="badge obs-b">H-maser frequency standard</span>
+          <span class="badge obs-b">Mark6 recorder</span>
+          <span class="badge obs-b">S/X dual-band</span>
+          <span class="badge obs-b">VGOS 2–14 GHz</span>
+          <span class="badge obs-b">~8 Gbps data rate</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Step 2 — Data Transport -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node obs-node">
+          <svg width="17" height="17" style="color:var(--obs)"><use href="#s-disk"/></svg>
+        </div>
+        <div class="trail obs-trail"></div>
+      </div>
+      <article class="card">
+        <div class="card-hd">
+          <div class="ico obs-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--obs)"><use href="#s-disk"/></svg>
+          </div>
+          <div>
+            <div class="card-name">Data Transport</div>
+            <div class="card-sub">Station → Correlator Centre</div>
+          </div>
+        </div>
+        <p class="card-desc">Station recordings are shipped physically on <strong>Mark6 disk modules</strong> (the standard for most sessions) or transferred in real-time via high-speed broadband (e-VLBI). Transit latency determines how quickly EOP products can reach IERS for rapid-turnaround R1/R4 sessions.</p>
+        <div class="badges">
+          <span class="badge obs-b">Mark6 disk modules (physical)</span>
+          <span class="badge obs-b">e-VLBI broadband</span>
+          <span class="badge obs-b">VDIF format</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PHASE 2 · CORRELATION ═══════════════ -->
+  <section class="phase" aria-labelledby="ph2">
+    <div class="phase-hd">
+      <span id="ph2" class="phase-pill cor-pill">Phase 2 · Correlation</span>
+      <div class="phase-rule cor-rule" role="presentation"></div>
+    </div>
+
+    <!-- Step 3 — Correlator -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node cor-node">
+          <svg width="17" height="17" style="color:var(--cor)"><use href="#s-chip"/></svg>
+        </div>
+        <div class="trail cor-trail"></div>
+      </div>
+      <article class="card">
+        <div class="card-hd">
+          <div class="ico cor-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--cor)"><use href="#s-chip"/></svg>
+          </div>
+          <div>
+            <div class="card-name">Software Correlator</div>
+            <div class="card-sub">IVS Correlator Centre · DiFX</div>
+          </div>
+        </div>
+        <p class="card-desc">The correlator cross-correlates the digitised voltage streams from every station pair (baseline), compensating for geometric path-length differences. Output: complex cross-spectra across all frequency channels per baseline per scan. The group delay observable <em>τ = −dφ/dω</em> is extracted from the spectral phase slope.</p>
+        <div class="badges">
+          <span class="badge cor-b">DiFX / Mark5 correlator</span>
+          <span class="badge cor-b">Cross-spectra per baseline</span>
+          <span class="badge cor-b">Multi-band group delay</span>
+          <span class="badge cor-b">τ = −dφ/dω</span>
+          <span class="badge bv bv1">→ vgosDB v1</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PHASE 3 · THEORY & CALIBRATION ═══════════════ -->
+  <section class="phase" aria-labelledby="ph3">
+    <div class="phase-hd">
+      <span id="ph3" class="phase-pill cal-pill">Phase 3 · Theory &amp; Calibration</span>
+      <div class="phase-rule cal-rule" role="presentation"></div>
+    </div>
+
+    <!-- Step 4 — Theoretical delays -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node cal-node">
+          <svg width="17" height="17" style="color:var(--cal)"><use href="#s-wave"/></svg>
+        </div>
+        <div class="trail cal-trail"></div>
+      </div>
+      <article class="card">
+        <div class="card-hd">
+          <div class="ico cal-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--cal)"><use href="#s-wave"/></svg>
+          </div>
+          <div>
+            <div class="card-name">Theoretical Delays</div>
+            <div class="card-sub">vgosDbCalc · IERS Conventions 2010</div>
+          </div>
+        </div>
+        <p class="card-desc"><em>vgosDbCalc</em> computes the a priori theoretical delay using the full IERS 2010 model: geometric baseline delay, Earth orientation and precession-nutation, relativistic Shapiro delay, and the a priori hydrostatic tropospheric delay from <strong>VMF3</strong> mapping functions. The residual (observed − theoretical) is the analysis input.</p>
+        <div class="badges">
+          <span class="badge cal-b">VMF3 hydrostatic mapping</span>
+          <span class="badge cal-b">Earth orientation model</span>
+          <span class="badge cal-b">Relativistic Shapiro delay</span>
+          <span class="badge cal-b">Solid Earth tides</span>
+          <span class="badge bv bv2">→ vgosDB v2</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Step 5 — Calibration -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node cal-node">
+          <svg width="17" height="17" style="color:var(--cal)"><use href="#s-wrench"/></svg>
+        </div>
+        <div class="trail cal-trail"></div>
+      </div>
+      <article class="card">
+        <div class="card-hd">
+          <div class="ico cal-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--cal)"><use href="#s-wrench"/></svg>
+          </div>
+          <div>
+            <div class="card-name">Instrument Calibration</div>
+            <div class="card-sub">vgosDbProcLogs · Phase-cal &amp; cable-cal</div>
+          </div>
+        </div>
+        <p class="card-desc">Station-specific hardware delays are removed: <strong>cable-delay calibration</strong> corrects signal path variations, <strong>phase-cal tones</strong> align inter-channel phases, and system temperature (T<sub>sys</sub>) measurements calibrate amplitude. An a priori ionospheric model (Global Ionosphere Map) is optionally applied before the analyst takes over.</p>
+        <div class="badges">
+          <span class="badge cal-b">Cable-cal correction</span>
+          <span class="badge cal-b">PC-cal phase tones</span>
+          <span class="badge cal-b">T<sub>sys</sub> amplitude calibration</span>
+          <span class="badge cal-b">GIM ionosphere (optional)</span>
+          <span class="badge bv bv3">→ vgosDB v3</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PHASE 4 · PRE-PROCESSING ═══════════════ -->
+  <section class="phase" aria-labelledby="ph4">
+    <div class="phase-hd">
+      <span id="ph4" class="phase-pill pre-pill">Phase 4 · Analyst Pre-processing</span>
+      <div class="phase-rule pre-rule" role="presentation"></div>
+    </div>
+
+    <!-- Step 6 — Analyst -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node pre-node">
+          <svg width="17" height="17" style="color:var(--pre)"><use href="#s-mag"/></svg>
+        </div>
+        <div class="trail pre-trail"></div>
+      </div>
+      <article class="card">
+        <div class="card-hd">
+          <div class="ico pre-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--pre)"><use href="#s-mag"/></svg>
+          </div>
+          <div>
+            <div class="card-name">Analyst Pre-processing</div>
+            <div class="card-sub">nuSolve / VieVS · Human-in-the-loop</div>
+          </div>
+        </div>
+        <p class="card-desc">Three analyst tasks convert the ambiguous multi-band delays into unambiguous picosecond observables ready for parameter estimation:<br><br>
+        <strong>① Ambiguity resolution</strong> — removes the integer-cycle ambiguity (S/X: τ<sub>amb</sub> ≈ 50 ns; VGOS: τ<sub>amb</sub> ≈ 83 ps, effectively eliminated).<br>
+        <strong>② Clock break detection</strong> — identifies discontinuous maser jumps and segments the clock polynomial accordingly.<br>
+        <strong>③ Ionospheric calibration</strong> — combines S- and X-band delays to remove the dispersive ionospheric contribution: <em>Δτ<sub>ion</sub> = (τ<sub>S</sub>−τ<sub>X</sub>)·ν<sub>S</sub>²/(ν<sub>S</sub>²−ν<sub>X</sub>²)</em>.</p>
+        <div class="badges">
+          <span class="badge pre-b">Ambiguity resolution</span>
+          <span class="badge pre-b">Clock break segmentation</span>
+          <span class="badge pre-b">S/X ionosphere removal</span>
+          <span class="badge pre-b">Δτ<sub>ion</sub> = (τ<sub>S</sub>−τ<sub>X</sub>)·ν<sub>S</sub>²/(ν<sub>S</sub>²−ν<sub>X</sub>²)</span>
+          <span class="badge bv bv4">→ vgosDB v4</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PHASE 5 · ESTIMATION ═══════════════ -->
+  <section class="phase" aria-labelledby="ph5">
+    <div class="phase-hd">
+      <span id="ph5" class="phase-pill est-pill">Phase 5 · Parameter Estimation</span>
+      <div class="phase-rule est-rule" role="presentation"></div>
+    </div>
+
+    <!-- Step 7 — LSQ -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node est-node">
+          <svg width="17" height="17" style="color:var(--est)"><use href="#s-matrix"/></svg>
+        </div>
+        <div class="trail est-trail"></div>
+      </div>
+      <article class="card">
+        <div class="card-hd">
+          <div class="ico est-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--est)"><use href="#s-matrix"/></svg>
+          </div>
+          <div>
+            <div class="card-name">Least Squares Estimation</div>
+            <div class="card-sub">Weighted LSQ · Normal equation system</div>
+          </div>
+        </div>
+        <p class="card-desc">Linearised observation equations <em>A·δx = l + v</em> are formed from vgosDB v4 residuals. Time-varying parameters — clocks (60-min nodes), ZWD (30-min nodes), tropospheric gradients G<sub>N</sub>/G<sub>E</sub> — use <strong>piecewise-linear offsets (PWLO)</strong>. Stochastic constraints (relative: ZWD ±15 mm/√h; absolute: G = 0 ± 0.5 mm) regularise the PWLO. The <strong>normal matrix</strong> <em>N = A<sup>T</sup>PA</em> is solved after imposing <strong>NNR/NNT datum conditions</strong> to eliminate VLBI's 6 geometric rank deficiencies (3 translations + 3 rotations). Scale is already fixed by <em>c</em> = 299 792 458 m/s.</p>
+        <div class="badges">
+          <span class="badge est-b">PWLO clocks — 60 min nodes</span>
+          <span class="badge est-b">ZWD + gradients G<sub>N</sub>/G<sub>E</sub></span>
+          <span class="badge est-b">NNR / NNT datum</span>
+          <span class="badge est-b">N·δx = A<sup>T</sup>Pl</span>
+          <span class="badge est-b">Scale fixed by c</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Step 8 — QC -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node est-node">
+          <svg width="17" height="17" style="color:var(--est)"><use href="#s-check"/></svg>
+        </div>
+        <div class="trail est-trail"></div>
+      </div>
+      <article class="card">
+        <div class="card-hd">
+          <div class="ico est-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--est)"><use href="#s-check"/></svg>
+          </div>
+          <div>
+            <div class="card-name">Quality Control</div>
+            <div class="card-sub">Residual analysis · Iterative outlier rejection</div>
+          </div>
+        </div>
+        <p class="card-desc">Post-fit residuals are inspected for systematic patterns: station-dependent biases, elevation-dependent tropospheric signals, and scan outliers exceeding 3σ. The a posteriori variance factor <em>s₀² = v<sup>T</sup>Pv / (n−u)</em> and the per-station WRMS quantify solution quality. Outliers are down-weighted (SIGMA editing) and the solution is iterated. Target: <strong>WRMS ≈ 20–30 ps</strong>.</p>
+        <div class="badges">
+          <span class="badge est-b">WRMS target: 20–30 ps</span>
+          <span class="badge est-b">s₀² ≈ 1.0 (well-conditioned)</span>
+          <span class="badge est-b">3σ outlier rejection</span>
+          <span class="badge est-b">Iterative SIGMA editing</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PHASE 6 · PRODUCTS ═══════════════ -->
+  <section class="phase" aria-labelledby="ph6">
+    <div class="phase-hd">
+      <span id="ph6" class="phase-pill prd-pill">Phase 6 · Geodetic Products</span>
+      <div class="phase-rule prd-rule" role="presentation"></div>
+    </div>
+
+    <!-- Step 9 — Products -->
+    <div class="step">
+      <div class="conn" aria-hidden="true">
+        <div class="node prd-node">
+          <svg width="17" height="17" style="color:var(--prd)"><use href="#s-globe"/></svg>
+        </div>
+      </div>
+      <article class="card" style="border-color:rgba(3,105,161,.28);box-shadow:0 4px 22px rgba(3,105,161,.10)">
+        <div class="card-hd">
+          <div class="ico prd-ico" aria-hidden="true">
+            <svg width="22" height="22" style="color:var(--prd)"><use href="#s-globe"/></svg>
+          </div>
+          <div>
+            <div class="card-name">VLBI Geodetic Products</div>
+            <div class="card-sub">IVS Analysis Centres → IERS Bureaux</div>
+          </div>
+        </div>
+        <p class="card-desc">Session normal equations are reduced (Schur complement: <em>N<sub>REDUC</sub> = N<sub>gg</sub> − N<sub>gl</sub>·N<sub>ll</sub><sup>−1</sup>·N<sub>lg</sub></em>) and then accumulated across all IVS sessions spanning decades (<em>N<sub>global</sub> = Σ N<sub>s,REDUC</sub></em>) to produce multi-year global solutions. VLBI uniquely provides <strong>UT1−UTC</strong> and <strong>celestial pole offsets</strong> — quantities no other geodetic technique can deliver — and contributes the metrological scale via <em>c</em> to ITRF.</p>
+        <div class="prd-grid">
+          <div class="prd-tile">
+            <div class="prd-tile-lbl">Polar Motion</div>
+            <div class="prd-tile-val">x<sub>p</sub>, y<sub>p</sub></div>
+          </div>
+          <div class="prd-tile">
+            <div class="prd-tile-lbl">Earth Rotation</div>
+            <div class="prd-tile-val">UT1 − UTC</div>
+          </div>
+          <div class="prd-tile">
+            <div class="prd-tile-lbl">Celestial Pole</div>
+            <div class="prd-tile-val">dX, dY</div>
+          </div>
+          <div class="prd-tile">
+            <div class="prd-tile-lbl">Station Coords</div>
+            <div class="prd-tile-val">ITRF2020</div>
+          </div>
+          <div class="prd-tile">
+            <div class="prd-tile-lbl">Troposphere</div>
+            <div class="prd-tile-val">ZWD, G<sub>N</sub>/G<sub>E</sub></div>
+          </div>
+          <div class="prd-tile">
+            <div class="prd-tile-lbl">Radio Sources</div>
+            <div class="prd-tile-val">ICRF3</div>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="badge prd-b">NEQ stacking: N<sub>global</sub> = Σ N<sub>s,REDUC</sub></span>
+          <span class="badge prd-b">→ IERS Bulletins A &amp; B</span>
+          <span class="badge prd-b">→ ITRF2020 contribution</span>
+          <span class="badge prd-b">→ ICRF3</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ftr">
+  IVS Training School · October 2025 &nbsp;·&nbsp; L11 — Geodetic VLBI Data Analysis &nbsp;·&nbsp; H. Krásná, TU Wien
+</footer>
+
+</body></html>
