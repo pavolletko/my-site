@@ -1,7 +1,7 @@
 project:
   type: website
   resources:
-    - static/*
+    - space geodesy/*.html
 
 website:
   title: "My Site"

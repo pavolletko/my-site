@@ -2,8 +2,9 @@
 title: "Space Geodesy"
 ---
 
-Interactive reports produced in our quarterly analysis. Click to open.
 
 | Report | Description |
 |--------|-------------|
 | [European VLBI analysis and observation sites](European_VLBI_network.html) |
+| [VLBI Geodetic Products](VLBI_geodetic_products.html) | Geodetic parameters estimated by VLBI with formal uncertainties and published on various sites - click links below
+| [VLBI Processing Workflow](VLBI_processing_workflow.html) |
