@@ -8,6 +8,7 @@
 
 <meta name="author" content="Pavol Letko">
 <meta name="dcterms.date" content="2026-10-29">
+<meta name="description" content="Spracovanie merania z metódy VLBI, Kozmická geodézia 2, zadanie 2">
 
 <title>VLBI - spracovanie merania – My Site</title>
 <style>
@@ -178,7 +179,7 @@ window.Quarto = {
 </script>
 
 <meta property="og:title" content="VLBI - spracovanie merania – My Site">
-<meta property="og:description" content="">
+<meta property="og:description" content="Spracovanie merania z metódy VLBI, Kozmická geodézia 2, zadanie 2">
 <meta property="og:site_name" content="My Site">
 </head>
 
@@ -215,6 +216,14 @@ window.Quarto = {
     <a class="nav-link" href="../../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../static/European_VLBI_network.html"> 
+<span class="menu-text">VLBI</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Space Geodesy/index.html"> 
+<span class="menu-text">Space Geodesy</span></a>
+  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -238,9 +247,14 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#interpolácia" id="toc-interpolácia" class="nav-link active" data-scroll-target="#interpolácia">Interpolácia</a></li>
-  <li><a href="#výpočet-okamihov-merania-v-rôznych-časových-systémoch" id="toc-výpočet-okamihov-merania-v-rôznych-časových-systémoch" class="nav-link" data-scroll-target="#výpočet-okamihov-merania-v-rôznych-časových-systémoch">Výpočet okamihov merania v rôznych časových systémoch</a></li>
-  <li><a href="#systematické-korekcie" id="toc-systematické-korekcie" class="nav-link" data-scroll-target="#systematické-korekcie">Systematické korekcie</a></li>
+  <li><a href="#výpočet-okamihov-merania-v-rôznych-časových-systémoch" id="toc-výpočet-okamihov-merania-v-rôznych-časových-systémoch" class="nav-link active" data-scroll-target="#výpočet-okamihov-merania-v-rôznych-časových-systémoch"><span class="header-section-number">1</span> Výpočet okamihov merania v rôznych časových systémoch</a></li>
+  <li><a href="#interpolácia" id="toc-interpolácia" class="nav-link" data-scroll-target="#interpolácia"><span class="header-section-number">2</span> Interpolácia</a></li>
+  <li><a href="#transformácia-z-konvenčného-terestrického-referenčného-systému-do-konvenčného-nebeského-referenčného-systému" id="toc-transformácia-z-konvenčného-terestrického-referenčného-systému-do-konvenčného-nebeského-referenčného-systému" class="nav-link" data-scroll-target="#transformácia-z-konvenčného-terestrického-referenčného-systému-do-konvenčného-nebeského-referenčného-systému"><span class="header-section-number">3</span> Transformácia z konvenčného terestrického referenčného systému do konvenčného nebeského referenčného systému</a></li>
+  <li><a href="#systematické-korekcie" id="toc-systematické-korekcie" class="nav-link" data-scroll-target="#systematické-korekcie"><span class="header-section-number">4</span> Systematické korekcie</a>
+  <ul class="collapse">
+  <li><a href="#oprava-z-ionosféry-ion" id="toc-oprava-z-ionosféry-ion" class="nav-link" data-scroll-target="#oprava-z-ionosféry-ion"><span class="header-section-number">4.1</span> Oprava z ionosféry <span class="math inline">\(ion\)</span></a></li>
+  <li><a href="#oprava-z-troposféry-trop" id="toc-oprava-z-troposféry-trop" class="nav-link" data-scroll-target="#oprava-z-troposféry-trop"><span class="header-section-number">4.2</span> Oprava z troposféry <span class="math inline">\(trop\)</span></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -252,6 +266,11 @@ window.Quarto = {
 <h1 class="title">VLBI - spracovanie merania</h1>
 </div>
 
+<div>
+  <div class="description">
+    Spracovanie merania z metódy VLBI, Kozmická geodézia 2, zadanie 2
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -278,6 +297,18 @@ window.Quarto = {
 </header>
 
 
+<section id="výpočet-okamihov-merania-v-rôznych-časových-systémoch" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="výpočet-okamihov-merania-v-rôznych-časových-systémoch"><span class="header-section-number">1</span> Výpočet okamihov merania v rôznych časových systémoch</h2>
+<p>Merané časové oneskorenie <span class="math inline">\(\tau\)</span> je registrované v časovom systéme atómových hodín danej stanice na povrchu Zeme, ktorým je systém <span class="math inline">\(UTC\)</span>. V dátovom súbore z merania sú zaznamenané okamihy registrácie príjmu signálu na hodinách stanice 1 - okamihy merania <span class="math inline">\(UTC_i\)</span>, pričom <span class="math inline">\(i = (1, 2, ... n)\)</span>. Tieto postupne vyjadríme v systéme <span class="math inline">\(UT1\)</span>, <span class="math inline">\(TT\)</span>, <span class="pop-term"><span class="math inline">\(TDB\)</span><span class="popover-card"><strong>TDB:</strong> Barycentrický dynamický čas </span></span> a v pravom greenwichskom hviezdnom čase <span class="math inline">\(S\)</span>.</p>
+</section>
+<section id="interpolácia" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="interpolácia"><span class="header-section-number">2</span> Interpolácia</h2>
+<p>Keďže vo výpočte vystupujú rôzne veličiny, ktoré sú v ročenkách a iných dátových zdrojoch uvedené v rôznych časových systémoch a potenciálne s rôznym časovým krokom, musíme túto skutočnosť pri interpolácii zohľadniť. V praxi to znamená, že interpolačný argument musí byť vždy vyjadrený v príslušnom časovom systéme (teda v rovnakom, v akom sú uvedené tabuľkované údaje). Keďže všetky potrebné veličiny sú uvedené s krokom jeden deň (24 hodín v danom časovom systéme), stačí použiť lineárnu interpoláciu (prvé diferencie). Prvé diferencie budú predstavovať zmenu danej veličiny za jeden deň a interpolačný argument bude vyjadrený v dňoch [<span class="math inline">\(d\)</span>]. Všeobecný interpolačný vzťah tak bude</p>
+<p><span id="eq-interp"><span class="math display">\[\Omega_i = \Omega_0 + (\Omega_1 - \Omega_0)\cdot n^{T}_i, \tag{1}\]</span></span></p>
+<p>kde <span class="math inline">\(\Omega\)</span> označuje príslušnú veličinu / objekt, ktorý interpolujeme (napr. precesno-nutačnú maticu <span class="math inline">\(\mathbf{R}\)</span> alebo vektor barycentrickej rýchlosti Zeme <span class="math inline">\(\mathbf{E}_B\)</span>). Indexy <span class="math inline">\(0,1,i\)</span> označujú hodnotu veličiny <span class="math inline">\(\Omega\)</span> v dátume merania, v nasledujúcom dátume a v okamihu merania. <span class="math inline">\(n^T_i\)</span> označuje interpolačný argument, ktorý vyjadruje časovú odľahlosť okamihu <span class="math inline">\(i\)</span> od tabuľkového okamihu <span class="math inline">\(0\)</span> vyjadrený v časovom systéme <span class="math inline">\(T\)</span>. Na tento účel sme počítali okamihy merania v rôznych časových systémoch v predchádzajúcom kroku - teraz stačí len jednotlivé okamihy vyjadriť v dňoch a máme všetky potrebné interpolačné argumenty <span class="math inline">\(n^T_i\)</span>.</p>
+</section>
+<section id="transformácia-z-konvenčného-terestrického-referenčného-systému-do-konvenčného-nebeského-referenčného-systému" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="transformácia-z-konvenčného-terestrického-referenčného-systému-do-konvenčného-nebeského-referenčného-systému"><span class="header-section-number">3</span> Transformácia z konvenčného terestrického referenčného systému do konvenčného nebeského referenčného systému</h2>
 <p>Jednotlivé matice v matici <span class="math inline">\(\mathbf{Q}\)</span>:</p>
 <p><span id="eq-XY"><span class="math display">\[\mathbf{Y} =
 \begin{pmatrix}
@@ -291,39 +322,33 @@ window.Quarto = {
 \cos x_p &amp; 0 &amp; -\sin x_p \\
 0 &amp; 1 &amp; 0 \\
 \sin x_p &amp; 0 &amp; \cos x_p
-\end{pmatrix}, \tag{1}\]</span></span></p>
+\end{pmatrix}, \tag{2}\]</span></span></p>
 <p><span id="eq-U"><span class="math display">\[\mathbf{U} = \mathbf{R}_z(-S) =
 \begin{pmatrix}
 \cos S &amp; -\sin S &amp; 0 \\
 \sin S &amp; \cos S &amp; 0 \\
 0 &amp; 0 &amp; 1
-\end{pmatrix}, \tag{2}\]</span></span></p>
-<p>V rovnici (<a href="#eq-XY" class="quarto-xref">1</a>) je vidieť…</p>
+\end{pmatrix}, \tag{3}\]</span></span></p>
+<p>V rovnici (<a href="#eq-XY" class="quarto-xref">2</a>) je vidieť…</p>
 <p>pričom inverznú precesno-nutačnú maticu <span class="math inline">\(\mathbf{R}^{-1}\)</span> dostaneme na základe vlastnosti <strong>ortogonality</strong> rotačnej matice, takže <span class="math inline">\(\mathbf{R}^{-1}\)</span> = <span class="quiz-blank"><span class="math inline">\(\mathbf{R}^T\)</span></span>.</p>
-<p>Matica <span class="math inline">\(\mathbf{Q}\)</span> musí byť známa vždy k okamihu daného pozorovania <span class="math inline">\(i\)</span>, preto jednotlivé matice musíme k tomuto okamihu vypočítať, resp. interpolovať. Vo výsledku tak dostaneme <span class="math inline">\(n\)</span> matíc <span class="math inline">\(\mathbf{Q}_i\)</span>.</p>
-<section id="interpolácia" class="level3">
-<h3 class="anchored" data-anchor-id="interpolácia">Interpolácia</h3>
+<p>Matica <span class="math inline">\(\mathbf{Q}\)</span> musí byť známa vždy k okamihu daného pozorovania <span class="math inline">\(i\)</span>, preto jednotlivé matice musíme k tomuto okamihu vypočítať, resp. interpolovať. Vo výsledku tak dostaneme <span class="math inline">\(n\)</span> matíc <span class="math inline">\(\mathbf{Q}_i\)</span>, pre ktoré platí <span class="math display">\[\mathbf{Q}_i = \mathbf{R}^{-1}_i\mathbf{U}_i\mathbf{X}_i\mathbf{Y}_i ,\qquad (i = 1, 2, \dots n).\]</span></p>
 </section>
-<section id="výpočet-okamihov-merania-v-rôznych-časových-systémoch" class="level3">
-<h3 class="anchored" data-anchor-id="výpočet-okamihov-merania-v-rôznych-časových-systémoch">Výpočet okamihov merania v rôznych časových systémoch</h3>
-<p>Merané časové oneskorenie <span class="math inline">\(\tau\)</span> je registrované v časovom systéme atómových hodín danej stanice na povrchu Zeme, ktorým je systém <span class="math inline">\(UTC\)</span>. V dátovom súbore z merania sú zaznamenané okamihy registrácie príjmu signálu na hodinách stanice 1 - okamihy merania <span class="math inline">\(UTC_i\)</span>, pričom <span class="math inline">\(i = (1, 2, ... n)\)</span>. Tieto postupne vyjadríme v systéme <span class="math inline">\(UT1\)</span>, <span class="math inline">\(TT\)</span>, <span class="pop-term"><span class="math inline">\(TDB\)</span><span class="popover-card"><strong>TDB:</strong> Barycentrický dynamický čas </span></span> a v pravom greenwichskom hviezdnom čase <span class="math inline">\(S\)</span>.</p>
-</section>
-<section id="systematické-korekcie" class="level3">
-<h3 class="anchored" data-anchor-id="systematické-korekcie">Systematické korekcie</h3>
+<section id="systematické-korekcie" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="systematické-korekcie"><span class="header-section-number">4</span> Systematické korekcie</h2>
 <ul>
 <li>Oprava z ionosféry <span class="math inline">\(ion_i\)</span>,</li>
 <li>Oprava z troposféry <span class="math inline">\(trop_i\)</span>,</li>
 <li>Oprava (korekcia) hodín stanice 2 na hodiny stanice 1 <span class="math inline">\(K\)</span>.</li>
 </ul>
-<section id="oprava-z-ionosféry-ion" class="level4">
-<h4 class="anchored" data-anchor-id="oprava-z-ionosféry-ion">Oprava z ionosféry <span class="math inline">\(ion\)</span></h4>
+<section id="oprava-z-ionosféry-ion" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="oprava-z-ionosféry-ion"><span class="header-section-number">4.1</span> Oprava z ionosféry <span class="math inline">\(ion\)</span></h3>
 <ul>
 <li>nachádza sa priamo v dátovom súbore z merania (viď. popis formátu NGS),</li>
 <li>rovnaká pre obe stanice, stačí ju teda len pridať k približnému oneskoreniu <span class="math inline">\(\tau'_0\)</span>.</li>
 </ul>
 </section>
-<section id="oprava-z-troposféry-trop" class="level4">
-<h4 class="anchored" data-anchor-id="oprava-z-troposféry-trop">Oprava z troposféry <span class="math inline">\(trop\)</span></h4>
+<section id="oprava-z-troposféry-trop" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="oprava-z-troposféry-trop"><span class="header-section-number">4.2</span> Oprava z troposféry <span class="math inline">\(trop\)</span></h3>
 <ul>
 <li>funkcia okamžitého stavu atmosféry v okamihu merania,</li>
 <li>počítaná na základe empirických vzťahov a prijatého modelu atmosféry,</li>
@@ -335,12 +360,12 @@ trop_{ij} &amp;= \frac{155{,}2 \cdot 10^{-7}\,\dfrac{p_{ij}}{T_{ij}}\left[40136 
 &amp; \\
 &amp;\quad+ \frac{155{,}2 \cdot 10^{-7}\,\dfrac{4810\,e_{ij}}{T_{ij}^2} \cdot 11000}{\sin\sqrt{(90^{\circ} - z_{ij})^2 + (1{,}5^{\circ})^2}},
 \end{split}
-\tag{3}\]</span></span></p>
-<p>kde <span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(p_{ij}\)</span> - tlak na stanici <span class="math inline">\(j\)</span> v okamihu merania <span class="math inline">\(i\)</span> v [<span class="math inline">\(hPa\)</span>], <span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(T_{ij}\)</span> - absolútna teplota na stanici <span class="math inline">\(j\)</span> v okamihu merania <span class="math inline">\(i\)</span> v [<span class="math inline">\(^\circ K\)</span>], pričom <span class="math inline">\(\\\)</span> <span id="eq-T"><span class="math display">\[T_{ij} = t_{ij} + 273,16^{\circ}C, \tag{4}\]</span></span><span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(t_{ij}\)</span> - teplota na stanici <span class="math inline">\(j\)</span> v okamihu <span class="math inline">\(i\)</span> v [<span class="math inline">\(^\circ C\)</span>], <span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(e_{ij}\)</span> - relatívna vlhkosť vzduchu na stanici <span class="math inline">\(j\)</span> v okamihu merania <span class="math inline">\(i\)</span>, pričom <span class="math inline">\(\\\)</span> <span id="eq-e"><span class="math display">\[e_{ij} = 6{,}107 \frac{f_{ij}}{100}10^\frac{7,6326\cdot t_{ij}}{241,9+t_{ij}}, \tag{5}\]</span></span> <span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(f_{ij}\)</span> - absolútna vlhkosť vzduchu v [%],<span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(z_{ij}\)</span> - zenitová vzdialenosť zo stanice <span class="math inline">\(j\)</span> na kvazar <span class="math inline">\(i\)</span> v [<span class="math inline">\(^\circ\)</span>].</p>
+\tag{4}\]</span></span></p>
+<p>kde <span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(p_{ij}\)</span> - tlak na stanici <span class="math inline">\(j\)</span> v okamihu merania <span class="math inline">\(i\)</span> v [<span class="math inline">\(hPa\)</span>], <span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(T_{ij}\)</span> - absolútna teplota na stanici <span class="math inline">\(j\)</span> v okamihu merania <span class="math inline">\(i\)</span> v [<span class="math inline">\(^\circ K\)</span>], pričom <span class="math inline">\(\\\)</span> <span id="eq-T"><span class="math display">\[T_{ij} = t_{ij} + 273,16^{\circ}C, \tag{5}\]</span></span><span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(t_{ij}\)</span> - teplota na stanici <span class="math inline">\(j\)</span> v okamihu <span class="math inline">\(i\)</span> v [<span class="math inline">\(^\circ C\)</span>], <span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(e_{ij}\)</span> - relatívna vlhkosť vzduchu na stanici <span class="math inline">\(j\)</span> v okamihu merania <span class="math inline">\(i\)</span>, pričom <span class="math inline">\(\\\)</span> <span id="eq-e"><span class="math display">\[e_{ij} = 6{,}107 \frac{f_{ij}}{100}10^\frac{7,6326\cdot t_{ij}}{241,9+t_{ij}}, \tag{6}\]</span></span> <span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(f_{ij}\)</span> - absolútna vlhkosť vzduchu v [%],<span class="math inline">\(\\\)</span> <span class="math inline">\(\quad\)</span> <span class="math inline">\(z_{ij}\)</span> - zenitová vzdialenosť zo stanice <span class="math inline">\(j\)</span> na kvazar <span class="math inline">\(i\)</span> v [<span class="math inline">\(^\circ\)</span>].</p>
 <p>Zenitová vzdialenosť <span class="math inline">\(z_{ij}\)</span> sa vypočíta štandardne pomocou kosínovej vety pre stranu v nautickom trojuholníku, kde namiesto hviezdy vystupuje kvazar Q a teda jeho rovníkové súradnice:</p>
-<p><span id="eq-z"><span class="math display">\[\cos z_{ij} = \sin\Phi_j \sin\delta_i + \cos\Phi_j \cos\delta_i \cos t_{ij}, \tag{6}\]</span></span></p>
+<p><span id="eq-z"><span class="math display">\[\cos z_{ij} = \sin\Phi_j \sin\delta_i + \cos\Phi_j \cos\delta_i \cos t_{ij}, \tag{7}\]</span></span></p>
 <p>pričom pre hodinový uhol <span class="math inline">\(t_{ij}\)</span> platí známy vzťah</p>
-<p><span id="eq-t"><span class="math display">\[t_{ij} = s_i - \alpha_j = S_i + \Lambda_j - \alpha_i, \qquad 0 \le t_{ij} \le 24^{\mathrm{h}}. \tag{7}\]</span></span></p>
+<p><span id="eq-t"><span class="math display">\[t_{ij} = s_i - \alpha_j = S_i + \Lambda_j - \alpha_i, \qquad 0 \le t_{ij} \le 24^{\mathrm{h}}. \tag{8}\]</span></span></p>
 <p>Zemepisné súradnice stanoviska <span class="math inline">\(\Phi_j\)</span>, <span class="math inline">\(\Lambda_j\)</span> získame konverziou zadaných priestorových karteziánskych súradníc príslušného stanoviska v systéme ITRS.</p>
 <p><abbr title="European Organization for Nuclear Research">CERN</abbr></p>
 
