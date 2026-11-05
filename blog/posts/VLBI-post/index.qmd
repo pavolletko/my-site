@@ -2,7 +2,25 @@
 title: "VLBI - spracovanie merania"
 author: "Pavol Letko"
 date: 2026-10-29
+number-sections: true
+toc: true
+description: Spracovanie merania z metódy VLBI, Kozmická geodézia 2, zadanie 2
 ---
+## Výpočet okamihov merania v rôznych časových systémoch
+
+Merané časové oneskorenie $\tau$ je registrované v časovom systéme atómových hodín danej stanice na povrchu Zeme, ktorým je systém $UTC$. V dátovom súbore z merania sú zaznamenané okamihy registrácie príjmu signálu na hodinách stanice 1 - okamihy merania $UTC_i$, pričom $i = (1, 2, ... n)$. Tieto postupne vyjadríme v systéme $UT1$, $TT$, <span class="pop-term">$TDB$<span class="popover-card"><strong>TDB:</strong> Barycentrický dynamický čas
+</span></span> a v pravom greenwichskom hviezdnom čase $S$.
+
+## Interpolácia
+
+Keďže vo výpočte vystupujú rôzne veličiny, ktoré sú v ročenkách a iných dátových zdrojoch uvedené v rôznych časových systémoch a potenciálne s rôznym časovým krokom, musíme túto skutočnosť pri interpolácii zohľadniť. V praxi to znamená, že interpolačný argument musí byť vždy vyjadrený v príslušnom časovom systéme (teda v rovnakom, v akom sú uvedené tabuľkované údaje). Keďže všetky potrebné veličiny sú uvedené s krokom jeden deň (24 hodín v danom časovom systéme), stačí použiť lineárnu interpoláciu (prvé diferencie). Prvé diferencie budú predstavovať zmenu danej veličiny za jeden deň a interpolačný argument bude vyjadrený v dňoch [$d$]. Všeobecný interpolačný vzťah tak bude
+
+$$\Omega_i = \Omega_0 + (\Omega_1 - \Omega_0)\cdot n^{T}_i,$$ {#eq-interp}
+
+kde $\Omega$ označuje príslušnú veličinu / objekt, ktorý interpolujeme (napr. precesno-nutačnú maticu $\mathbf{R}$ alebo vektor barycentrickej rýchlosti Zeme $\mathbf{E}_B$). Indexy $0,1,i$ označujú hodnotu veličiny $\Omega$ v dátume merania, v nasledujúcom dátume a v okamihu merania. $n^T_i$ označuje interpolačný argument, ktorý vyjadruje časovú odľahlosť okamihu $i$ od tabuľkového okamihu $0$ vyjadrený v časovom systéme $T$. Na tento účel sme počítali okamihy merania v rôznych časových systémoch v predchádzajúcom kroku - teraz stačí len jednotlivé okamihy vyjadriť v dňoch a máme všetky potrebné interpolačné argumenty $n^T_i$.
+
+
+## Transformácia z konvenčného terestrického referenčného systému do konvenčného nebeského referenčného systému
 
 Jednotlivé matice v matici $\mathbf{Q}$:
 
@@ -31,26 +49,21 @@ V rovnici ([-@eq-XY]) je vidieť...
 
 pričom inverznú precesno-nutačnú maticu $\mathbf{R}^{-1}$ dostaneme na základe vlastnosti **ortogonality** rotačnej matice, takže $\mathbf{R}^{-1}$ = <span class="quiz-blank">$\mathbf{R}^T$</span>.
 
-Matica $\mathbf{Q}$ musí byť známa vždy k okamihu daného pozorovania $i$, preto jednotlivé matice musíme k tomuto okamihu vypočítať, resp. interpolovať. Vo výsledku tak dostaneme $n$ matíc $\mathbf{Q}_i$.
+Matica $\mathbf{Q}$ musí byť známa vždy k okamihu daného pozorovania $i$, preto jednotlivé matice musíme k tomuto okamihu vypočítať, resp. interpolovať. Vo výsledku tak dostaneme $n$ matíc $\mathbf{Q}_i$, pre ktoré platí
+$$\mathbf{Q}_i = \mathbf{R}^{-1}_i\mathbf{U}_i\mathbf{X}_i\mathbf{Y}_i ,\qquad (i = 1, 2, \dots n).$$
 
-### Interpolácia
 
-### Výpočet okamihov merania v rôznych časových systémoch
-
-Merané časové oneskorenie $\tau$ je registrované v časovom systéme atómových hodín danej stanice na povrchu Zeme, ktorým je systém $UTC$. V dátovom súbore z merania sú zaznamenané okamihy registrácie príjmu signálu na hodinách stanice 1 - okamihy merania $UTC_i$, pričom $i = (1, 2, ... n)$. Tieto postupne vyjadríme v systéme $UT1$, $TT$, <span class="pop-term">$TDB$<span class="popover-card"><strong>TDB:</strong> Barycentrický dynamický čas
-</span></span> a v pravom greenwichskom hviezdnom čase $S$.
-
-### Systematické korekcie
+## Systematické korekcie
 
 - Oprava z ionosféry $ion_i$,
 - Oprava z troposféry $trop_i$,
 - Oprava (korekcia) hodín stanice 2 na hodiny stanice 1 $K$.
 
-#### Oprava z ionosféry $ion$
+### Oprava z ionosféry $ion$
 - nachádza sa priamo v dátovom súbore z merania (viď. popis formátu NGS),
 - rovnaká pre obe stanice, stačí ju teda len pridať k približnému oneskoreniu $\tau'_0$.
 
-#### Oprava z troposféry $trop$
+### Oprava z troposféry $trop$
 - funkcia okamžitého stavu atmosféry v okamihu merania,
 - počítaná na základe empirických vzťahov a prijatého modelu atmosféry,
 - počítaná pre každý meraný zdroj $i$ a každú stanicu $j$ zvlášť - $trop_{ij}$.

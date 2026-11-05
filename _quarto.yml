@@ -1,5 +1,7 @@
 project:
   type: website
+  resources:
+    - static/*
 
 website:
   title: "My Site"
@@ -14,6 +16,10 @@ website:
         text: Blog
       - href: about.qmd
         text: About
+      - href: static/European_VLBI_network.html
+        text: VLBI
+      - href: Space Geodesy/index.qmd
+        text: Space Geodesy
     right:
       - icon: github
         href: https://github.com/pavolletko/my-site
@@ -25,6 +31,7 @@ website:
             - docs/index.qmd
             - docs/guide.qmd
             - docs/reference.qmd
+
   page-footer:
     center: "© 2026 Your Name"
   open-graph: true       # nicer link previews when shared

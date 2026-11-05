@@ -73,6 +73,77 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>
+  .quiz-blank {
+    display: inline-block;
+    .quiz-blank:not(.revealed):not(:hover) {
+    width: 6em;
+    overflow: hidden;
+    white-space: nowrap;
+    }
+    padding: 0 0.5em;
+    background-color: #6750ff;      /* purple filled rectangle */
+    color: transparent;             /* hides the answer text */
+    border-radius: 4px;
+    cursor: pointer;
+    line-height: 1.5;
+    user-select: none;              /* prevents accidental selection revealing it */
+    transition: background-color 0.15s, color 0.15s;
+    text-align: center;
+  }
+  .quiz-blank.revealed,
+  .quiz-blank:hover {
+    background-color: #eceafd;      /* light highlight once revealed */
+    color: inherit;                 /* answer text becomes visible */
+  }
+</style>
+<script>
+  document.addEventListener("click", (ev) => {
+    const el = ev.target.closest(".quiz-blank");
+    if (el) el.classList.toggle("revealed");   // tap support on mobile
+  });
+</script>
+<style>
+  .pop-term {
+    border-bottom: 1px dashed #6750ff;
+    cursor: help;
+    position: relative;
+    display: inline-block;
+  }
+  .pop-term .popover-card {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 130%;                       /* floats above the word */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    background: #22222e;
+    color: #eee;
+    padding: 12px 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    font-size: 0.88em;
+    line-height: 1.45;
+    z-index: 1000;
+    transition: opacity 0.15s ease, visibility 0.15s;
+  }
+  /* little arrow pointing at the word */
+  .pop-term .popover-card::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border: 6px solid transparent;
+    border-top-color: #22222e;
+  }
+  .pop-term:hover .popover-card,
+  .pop-term:focus-within .popover-card {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
 
 
 </head>
@@ -109,6 +180,10 @@ ul.task-list li input[type="checkbox"] {
   <li class="nav-item">
     <a class="nav-link active" href="./about.html" aria-current="page"> 
 <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./static/European_VLBI_network.html"> 
+<span class="menu-text">VLBI</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">

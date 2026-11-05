@@ -7,4 +7,3 @@ listing:
   feed: true            # auto-generates an RSS feed at blog/index.xml
 ---
 
-Posts appear here automatically — no need to list them by hand.
